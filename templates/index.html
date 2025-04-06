@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Image Transmission</title>
+    <style>
+        /* 🔹 Top Navigation Styling */
+        .nav {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .nav a {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 10px 15px;
+            font-size: 14px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .nav a:hover {
+            background-color: #0056b3;
+        }
+
+        .welcome {
+            display: inline-block;
+            color: #333;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        select, input[type="file"], button, a {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        button, a {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+        button:hover, a:hover {
+            background-color: #218838;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function showForm() {
+            var choice = document.getElementById("choice").value;
+            document.getElementById("encryptForm").classList.add("hidden");
+            document.getElementById("decryptForm").classList.add("hidden");
+
+            if (choice === "encrypt") {
+                document.getElementById("encryptForm").classList.remove("hidden");
+            } else if (choice === "decrypt") {
+                document.getElementById("decryptForm").classList.remove("hidden");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="nav">
+        {% if 'username' in session %}
+            <p class="welcome">Welcome, <b>{{ session['username'] }}</b>!</p>
+            <a href="/logout" class="btn">Logout</a>
+        {% else %}
+            <a href="/login" class="btn">Login</a>
+            <a href="/signup" class="btn">Sign Up</a>
+        {% endif %}
+    </div>
+    <h1>Secure Image Transmission</h1>
+
+        <h2>Choose an Option</h2>
+        <select id="choice" onchange="showForm()">
+            <option value="" disabled selected>-- Select an Option --</option>
+            <option value="encrypt">Encrypt & Embed</option>
+            <option value="decrypt">Extract & Decrypt</option>
+        </select>
+
+        <div id="encryptForm" class="hidden">
+            <h2>Upload Image for Encryption</h2>
+            <form action="/encrypt" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" required>
+                <button type="submit">Encrypt & Embed</button>
+            </form>
+        </div>
+
+        <div id="decryptForm" class="hidden">
+            <h2>Upload Stego Image for Decryption</h2>
+            <form action="/extract-decrypt" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" required>
+                <button type="submit">Extract & Decrypt</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <h2>Download Processed Images</h2>
+        <!-- Encrypted Image Button -->
+        {% if show_encrypted %}
+        <button id="downloadEncrypted">
+            Download Encrypted Image
+        </button>
+        {% endif %}
+
+        <!-- Stego Image Button -->
+        {% if show_stego %}
+        <button id="downloadStego">
+            Download Stego Image
+        </button>
+        {% endif %}
+
+        <!-- Decrypted Image Button -->
+        {% if show_decrypted %}
+        <button id="downloadDecrypted">
+            Download Decrypted Image
+        </button>
+        {% endif %}
+
+
+
+    </div>
+</body>
+</html>
